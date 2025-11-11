@@ -16,8 +16,9 @@ export const LINK_COLORS: Record<string, string> = {
 
 export const GRAPH_CONFIG = {
   nodeSize: 5,
-  linkWidth: 2,
-  backgroundColor: "#ffffff",
   nodeBorderColor: "#ffffff",
   nodeBorderWidth: 1.5,
+  linkWidth: 2,
+  linkCurvature: 0.1,
+  backgroundColor: "#ffffff",
 };

@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ForceGraphMethods } from "react-force-graph-2d";
 import { GraphData, Layer } from "@/lib/graph/types";
 import { GRAPH_CONFIG } from "@/lib/graph/configs";
 import {
@@ -54,8 +55,28 @@ export function useGraphData(layer: Layer) {
 }
 
 export default function Graph() {
+  const fgRef = useRef<ForceGraphMethods | null>(null);
   const [layer, setLayer] = useState<Layer>("complete");
   const { graphData, loading, error, refetch } = useGraphData(layer);
+
+  const setFgRef = useCallback(
+    (inst: ForceGraphMethods | null) => {
+      fgRef.current = inst;
+
+      if (!fgRef.current) return;
+
+      if (layer !== "complete") return;
+
+      const linkForce = fgRef.current.d3Force("link");
+      if (linkForce) {
+        linkForce.strength((link: any) => {
+          const linkType = link.type;
+          return linkType === "RUNS_ON" ? 1 : 0.1;
+        });
+      }
+    },
+    [layer],
+  );
 
   if (loading) {
     return <Spinner />;
@@ -67,11 +88,13 @@ export default function Graph() {
 
   return (
     <ForceGraph2D
+      ref={setFgRef}
       graphData={graphData}
       nodeCanvasObject={renderNode}
       nodePointerAreaPaint={renderNodePointerArea}
       linkColor={getLinkColor}
       linkWidth={GRAPH_CONFIG.linkWidth}
+      linkCurvature={GRAPH_CONFIG.linkCurvature}
       backgroundColor={GRAPH_CONFIG.backgroundColor}
     />
   );
