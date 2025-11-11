@@ -2,12 +2,12 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
-interface ErrorProps {
+interface GraphErrorProps {
   error: string;
   onRetry?: () => void;
 }
 
-export default function Error({ error, onRetry }: ErrorProps) {
+export function GraphError({ error, onRetry }: GraphErrorProps) {
   return (
     <div className="flex h-screen w-full items-center justify-center p-4">
       <Alert variant="destructive" className="max-w-md">
