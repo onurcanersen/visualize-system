@@ -14,7 +14,7 @@ export const LINK_COLORS: Record<string, string> = {
   default: "#9ca3af", // light gray
 };
 
-export const GRAPH_CONFIG = {
+export const GRAPH_STYLE = {
   nodeSize: 5,
   nodeBorderColor: "#ffffff",
   nodeBorderWidth: 1.5,

@@ -1,23 +1,23 @@
-import { Node, Link } from "./types";
-import { NODE_COLORS, LINK_COLORS, GRAPH_CONFIG } from "./configs";
+import { GraphNode, GraphLink } from "./types";
+import { NODE_COLORS, LINK_COLORS, GRAPH_STYLE } from "./styles";
 import { drawNodeShape, getNodeShape } from "./shapes";
 
-export function getNodeColor(node: Node): string {
+export function getNodeColor(node: GraphNode): string {
   return NODE_COLORS[node.type] || NODE_COLORS.default;
 }
 
-export function getLinkColor(link: Link): string {
+export function getLinkColor(link: GraphLink): string {
   return LINK_COLORS[link.type] || LINK_COLORS.default;
 }
 
 export function renderNode(
-  node: Node,
+  node: GraphNode,
   ctx: CanvasRenderingContext2D,
   globalScale: number
 ) {
   if (!node.x || !node.y) return;
 
-  const size = GRAPH_CONFIG.nodeSize;
+  const size = GRAPH_STYLE.nodeSize;
   const color = getNodeColor(node);
   const shape = getNodeShape(node.type);
 
@@ -27,13 +27,13 @@ export function renderNode(
   ctx.fill();
 
   // Draw border
-  ctx.strokeStyle = GRAPH_CONFIG.nodeBorderColor;
-  ctx.lineWidth = GRAPH_CONFIG.nodeBorderWidth / globalScale;
+  ctx.strokeStyle = GRAPH_STYLE.nodeBorderColor;
+  ctx.lineWidth = GRAPH_STYLE.nodeBorderWidth / globalScale;
   ctx.stroke();
 }
 
 export function renderNodePointerArea(
-  node: Node,
+  node: GraphNode,
   color: string,
   ctx: CanvasRenderingContext2D
 ) {
@@ -41,6 +41,6 @@ export function renderNodePointerArea(
 
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.arc(node.x, node.y, GRAPH_CONFIG.nodeSize, 0, 2 * Math.PI);
+  ctx.arc(node.x, node.y, GRAPH_STYLE.nodeSize, 0, 2 * Math.PI);
   ctx.fill();
 }

@@ -1,6 +1,6 @@
 export type Layer = "infrastructure" | "application" | "complete";
 
-export interface Node {
+export interface GraphNode {
   id: string;
   type: string;
   name: string;
@@ -9,14 +9,15 @@ export interface Node {
   y?: number;
 }
 
-export interface Link {
+export interface GraphLink {
   source: string;
   target: string;
   type: string;
-  info: Record<string, unknown>;
+  info: Array<{ direction: string; [key: string]: unknown }>;
+  count: number;
 }
 
 export interface GraphData {
-  nodes: Node[];
-  links: Link[];
+  nodes: GraphNode[];
+  links: GraphLink[];
 }

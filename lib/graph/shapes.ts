@@ -1,4 +1,4 @@
-import { GRAPH_CONFIG } from "./configs";
+import { GRAPH_STYLE } from "./styles";
 
 export type NodeShape = "rectangle" | "circle" | "triangle";
 
@@ -44,7 +44,7 @@ export function drawNodeShape(
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
-  size: number = GRAPH_CONFIG.nodeSize
+  size: number = GRAPH_STYLE.nodeSize
 ) {
   ctx.beginPath();
 
