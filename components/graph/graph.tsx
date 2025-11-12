@@ -1,16 +1,17 @@
 "use client";
 import dynamic from "next/dynamic";
 import { Layer } from "@/lib/graph/types";
-import { GRAPH_STYLES } from "@/lib/graph/styles";
 import {
   getLinkColor,
   renderNode,
   renderNodePointerArea,
 } from "@/lib/graph/renderer";
 import {
+  GRAPH_STYLES,
   getLinkDirectionalParticles,
   getLinkDirectionalParticleSpeed,
   getLinkDirectionalParticleWidth,
+  getLinkDirectionalParticleColor,
   getLinkWidth,
 } from "@/lib/graph/styles";
 import { useGraphData } from "@/hooks/use-graph-data";
@@ -46,7 +47,7 @@ export function ForceGraph({ layer }: ForceGraphProps) {
         linkDirectionalParticles={getLinkDirectionalParticles}
         linkDirectionalParticleSpeed={getLinkDirectionalParticleSpeed}
         linkDirectionalParticleWidth={getLinkDirectionalParticleWidth}
-        linkDirectionalParticleColor={GRAPH_STYLES.linkParticleColor}
+        linkDirectionalParticleColor={getLinkDirectionalParticleColor}
         backgroundColor={GRAPH_STYLES.backgroundColor}
       />
     </div>

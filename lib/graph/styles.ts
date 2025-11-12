@@ -20,9 +20,11 @@ export const GRAPH_STYLES = {
   nodeSize: 3,
   nodeBorderColor: "#ffffff", // white
   nodeBorderWidth: 1.5,
-  linkWidth: 2,
+  linkWidth: { min: 1, max: 5, default: 2 },
   linkCurvature: 0.1,
   linkParticleColor: "#ff0000", // red
+  linkParticleSpeed: { min: 0.001, max: 0.01 },
+  linkParticleWidth: { min: 2, max: 5 },
   backgroundColor: "#ffffff", // white
 };
 
@@ -31,13 +33,6 @@ const LINK_METRICS = {
   PUBLISHES_TO: { maxValue: 100, property: "msg_rate_hz" },
   SUBSCRIBES_TO: { maxValue: 100, property: "consumption_rate" },
 };
-
-const LINK_PARTICLE_RANGE = {
-  speed: { min: 0.001, max: 0.01 },
-  width: { min: 2, max: 4 },
-};
-
-const LINK_WIDTH_RANGE = { min: 1, max: 5 };
 
 const getMetricConfig = (linkType: string) => LINK_METRICS[linkType];
 
@@ -74,8 +69,8 @@ export const getLinkDirectionalParticleSpeed = (link: GraphLink) => {
   const normalized = normalize(link);
   return scale(
     normalized,
-    LINK_PARTICLE_RANGE.speed.min,
-    LINK_PARTICLE_RANGE.speed.max
+    GRAPH_STYLES.linkParticleSpeed.min,
+    GRAPH_STYLES.linkParticleSpeed.max
   );
 };
 
@@ -83,14 +78,22 @@ export const getLinkDirectionalParticleWidth = (link: GraphLink) => {
   const normalized = normalize(link);
   return scale(
     normalized,
-    LINK_PARTICLE_RANGE.width.min,
-    LINK_PARTICLE_RANGE.width.max
+    GRAPH_STYLES.linkParticleWidth.min,
+    GRAPH_STYLES.linkParticleWidth.max
   );
 };
 
+export const getLinkDirectionalParticleColor = (link: GraphLink) => {
+  return GRAPH_STYLES.linkParticleColor;
+};
+
 export const getLinkWidth = (link: GraphLink) => {
-  if (!getMetricConfig(link.type)) return GRAPH_STYLES.linkWidth;
+  if (!getMetricConfig(link.type)) return GRAPH_STYLES.linkWidth.default;
 
   const normalized = normalize(link);
-  return scale(normalized, LINK_WIDTH_RANGE.min, LINK_WIDTH_RANGE.max);
+  return scale(
+    normalized,
+    GRAPH_STYLES.linkWidth.min,
+    GRAPH_STYLES.linkWidth.max
+  );
 };
