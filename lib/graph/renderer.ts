@@ -1,5 +1,5 @@
 import { GraphNode, GraphLink } from "./types";
-import { NODE_COLORS, LINK_COLORS, GRAPH_STYLE } from "./styles";
+import { NODE_COLORS, LINK_COLORS, GRAPH_STYLES } from "./styles";
 import { drawNodeShape, getNodeShape } from "./shapes";
 
 export function getNodeColor(node: GraphNode): string {
@@ -17,7 +17,7 @@ export function renderNode(
 ) {
   if (!node.x || !node.y) return;
 
-  const size = GRAPH_STYLE.nodeSize;
+  const size = GRAPH_STYLES.nodeSize;
   const color = getNodeColor(node);
   const shape = getNodeShape(node.type);
 
@@ -27,8 +27,8 @@ export function renderNode(
   ctx.fill();
 
   // Draw border
-  ctx.strokeStyle = GRAPH_STYLE.nodeBorderColor;
-  ctx.lineWidth = GRAPH_STYLE.nodeBorderWidth / globalScale;
+  ctx.strokeStyle = GRAPH_STYLES.nodeBorderColor;
+  ctx.lineWidth = GRAPH_STYLES.nodeBorderWidth / globalScale;
   ctx.stroke();
 }
 
@@ -41,6 +41,6 @@ export function renderNodePointerArea(
 
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.arc(node.x, node.y, GRAPH_STYLE.nodeSize, 0, 2 * Math.PI);
+  ctx.arc(node.x, node.y, GRAPH_STYLES.nodeSize, 0, 2 * Math.PI);
   ctx.fill();
 }
