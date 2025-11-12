@@ -22,6 +22,7 @@ export const GRAPH_STYLES = {
   nodeBorderWidth: 1.5,
   linkWidth: 2,
   linkCurvature: 0.1,
+  linkParticleColor: "#ff0000", // red
   backgroundColor: "#ffffff", // white
 };
 
@@ -33,7 +34,7 @@ const LINK_METRICS = {
 
 const LINK_PARTICLE_RANGE = {
   speed: { min: 0.001, max: 0.01 },
-  width: { min: 1, max: 4 },
+  width: { min: 2, max: 4 },
 };
 
 const LINK_WIDTH_RANGE = { min: 1, max: 5 };

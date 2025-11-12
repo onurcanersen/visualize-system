@@ -46,7 +46,7 @@ export function ForceGraph({ layer }: ForceGraphProps) {
         linkDirectionalParticles={getLinkDirectionalParticles}
         linkDirectionalParticleSpeed={getLinkDirectionalParticleSpeed}
         linkDirectionalParticleWidth={getLinkDirectionalParticleWidth}
-        linkDirectionalParticleColor={() => "#000000"}
+        linkDirectionalParticleColor={GRAPH_STYLES.linkParticleColor}
         backgroundColor={GRAPH_STYLES.backgroundColor}
       />
     </div>
