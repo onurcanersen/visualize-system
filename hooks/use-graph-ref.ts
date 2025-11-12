@@ -10,6 +10,8 @@ export function useGraphRef() {
 
     if (!inst) return;
 
+    setTimeout(() => inst.zoomToFit(400, 20), 100);
+
     const linkForce = inst.d3Force("link");
     if (linkForce) {
       linkForce.strength((link: GraphLink) => {
