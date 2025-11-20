@@ -88,12 +88,7 @@ export const getLinkDirectionalParticleColor = (link: GraphLink) => {
 };
 
 export const getLinkWidth = (link: GraphLink) => {
-  if (!getMetricConfig(link.type)) return GRAPH_STYLES.linkWidth.default;
+  if (!link.info?.length) return 0;
 
-  const normalized = normalize(link);
-  return scale(
-    normalized,
-    GRAPH_STYLES.linkWidth.min,
-    GRAPH_STYLES.linkWidth.max
-  );
+  return link.info.length;
 };

@@ -7,11 +7,13 @@ export interface GraphNode {
   info: Record<string, unknown>;
   x?: number;
   y?: number;
+  neighbors?: string[];
+  links?: GraphLink[];
 }
 
 export interface GraphLink {
-  source: string;
-  target: string;
+  source: string | { id: string };
+  target: string | { id: string };
   type: string;
   info: Array<{ direction: string; [key: string]: unknown }>;
   count: number;
