@@ -37,12 +37,6 @@ export function GraphSidebar({
   onNodeSearch,
   onClearSearch,
 }: SidebarProps) {
-  // Debug: Log when callbacks are received
-  console.log("GraphSidebar: Received callbacks:", {
-    hasOnNodeSearch: !!onNodeSearch,
-    hasOnClearSearch: !!onClearSearch,
-  });
-
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>

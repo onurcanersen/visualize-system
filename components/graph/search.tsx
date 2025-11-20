@@ -70,30 +70,6 @@ export function GraphSearch({
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  // Debug: Log when props are received
-  console.log("GraphSearch: Component mounted/updated with props:", {
-    hasGraphData: !!graphData,
-    nodeCount: graphData?.nodes?.length || 0,
-    hasOnNodeSearch: !!onNodeSearch,
-    hasOnClearSearch: !!onClearSearch,
-    onNodeSearchType: typeof onNodeSearch,
-  });
-
-  // Debug: Log when graphData changes
-  useEffect(() => {
-    if (graphData) {
-      console.log(
-        "GraphSearch: Received graphData with",
-        graphData.nodes?.length || 0,
-        "nodes and",
-        graphData.links?.length || 0,
-        "links"
-      );
-    } else {
-      console.log("GraphSearch: graphData is null");
-    }
-  }, [graphData]);
-
   const { searchTerm, setSearchTerm, suggestions, searchAndHighlight } =
     useGraphSearch(graphData);
 
@@ -102,14 +78,6 @@ export function GraphSearch({
   const [hasActiveSearch, setHasActiveSearch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
-
-  // Debug: Log suggestions
-  useEffect(() => {
-    console.log("GraphSearch: Suggestions count:", suggestions.length);
-    if (suggestions.length > 0) {
-      console.log("GraphSearch: First suggestion:", suggestions[0].node.name);
-    }
-  }, [suggestions]);
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -129,50 +97,26 @@ export function GraphSearch({
   }, []);
 
   const handleSearchChange = (value: string) => {
-    console.log("GraphSearch: Search term changed to:", value);
     setSearchTerm(value);
     setShowSuggestions(value.length >= 2);
     setActiveSuggestionIndex(0);
   };
 
   const handleSelectNode = (node: GraphNode) => {
-    console.log("GraphSearch: Node selected:", node.name, "ID:", node.id);
     const result = searchAndHighlight(node.id);
 
     if (result) {
-      console.log("GraphSearch: Search result:", {
-        nodeId: result.node.id,
-        nodeName: result.node.name,
-        connectedCount: result.connectedNodeIds.size,
-        connectedIds: Array.from(result.connectedNodeIds),
-      });
-
       setSearchTerm(node.name);
       setShowSuggestions(false);
       setHasActiveSearch(true);
 
       if (onNodeSearch) {
-        console.log(
-          "GraphSearch: Calling onNodeSearch with",
-          result.node.id,
-          "and",
-          result.connectedNodeIds.size,
-          "connected nodes"
-        );
         onNodeSearch(result.node.id, result.connectedNodeIds);
-      } else {
-        console.error("GraphSearch: onNodeSearch callback is not defined!");
       }
-    } else {
-      console.error(
-        "GraphSearch: searchAndHighlight returned null for node:",
-        node.id
-      );
     }
   };
 
   const handleClearSearch = () => {
-    console.log("GraphSearch: Clearing search");
     setSearchTerm("");
     setShowSuggestions(false);
     setHasActiveSearch(false);

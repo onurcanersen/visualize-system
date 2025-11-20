@@ -65,11 +65,6 @@ export default function GraphPage() {
     new Set()
   );
 
-  // Debug: Log on mount
-  useEffect(() => {
-    console.log("GraphPage: Component mounted");
-  }, []);
-
   // Memoize the filter callback to prevent recreating it on every render
   const handleFilterChange = useCallback(
     (newHiddenNodeTypes: Set<string>, newHiddenLinkTypes: Set<string>) => {
@@ -89,16 +84,8 @@ export default function GraphPage() {
 
   const handleNodeSearch = useCallback(
     (nodeId: string, connectedNodeIds: Set<string>) => {
-      console.log("GraphPage.handleNodeSearch: Called with:", {
-        nodeId,
-        connectedCount: connectedNodeIds.size,
-        connectedIds: Array.from(connectedNodeIds),
-      });
-
       setSearchNodeId(nodeId);
       setSearchConnectedNodes(connectedNodeIds);
-
-      console.log("GraphPage.handleNodeSearch: State updated");
 
       // Auto-select the searched node
       const node = graphData?.nodes.find((n) => n.id === nodeId);
@@ -113,14 +100,6 @@ export default function GraphPage() {
     setSearchNodeId(null);
     setSearchConnectedNodes(new Set());
   }, []);
-
-  // Debug: Log when callbacks are created
-  useEffect(() => {
-    console.log("GraphPage: Callbacks defined:", {
-      handleNodeSearch: typeof handleNodeSearch,
-      handleClearSearch: typeof handleClearSearch,
-    });
-  }, [handleNodeSearch, handleClearSearch]);
 
   // Apply only type-based filters (no search filtering)
   const filteredGraphData = useMemo(

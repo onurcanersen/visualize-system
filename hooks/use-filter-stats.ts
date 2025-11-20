@@ -19,11 +19,8 @@ export interface FilterStats {
 export function useFilterStats(graphData: GraphData | null): FilterStats {
   return useMemo(() => {
     if (!graphData) {
-      console.log("oersen1");
       return { nodeTypes: [], linkTypes: [] };
     }
-
-    console.log("oersen2");
 
     // Aggregate node types
     const nodeTypeCounts = new Map<string, number>();

@@ -16,21 +16,12 @@ export function useGraphSearch(graphData: GraphData | null) {
   // Create a search index for fast lookups and build neighbor relationships
   const searchIndex = useMemo(() => {
     if (!graphData) {
-      console.log("useGraphSearch: graphData is null");
       return {
         nodeMap: new Map(),
         searchableNodes: [],
         neighborMap: new Map(),
       };
     }
-
-    console.log("useGraphSearch: Building search index...");
-    console.log(
-      "useGraphSearch: Input - Nodes:",
-      graphData.nodes.length,
-      "Links:",
-      graphData.links.length
-    );
 
     const nodeMap = new Map<string, GraphNode>();
     const neighborMap = new Map<string, Set<string>>();
@@ -65,12 +56,6 @@ export function useGraphSearch(graphData: GraphData | null) {
       });
     });
 
-    console.log(
-      "useGraphSearch: Created",
-      searchableNodes.length,
-      "searchable nodes"
-    );
-
     // Build neighbor relationships from links
     let linkCount = 0;
     graphData.links.forEach((link) => {
@@ -97,21 +82,16 @@ export function useGraphSearch(graphData: GraphData | null) {
       }
     });
 
-    console.log("useGraphSearch: Processed", linkCount, "links");
-
     // Log some sample neighbor counts
     let sampleCount = 0;
     neighborMap.forEach((neighbors, nodeId) => {
       if (sampleCount < 3) {
         const node = nodeMap.get(nodeId);
-        console.log(
-          `useGraphSearch: Node "${node?.name}" (${nodeId}) has ${neighbors.size} connected nodes (including itself)`
-        );
+
         sampleCount++;
       }
     });
 
-    console.log("useGraphSearch: Index built successfully");
     return { nodeMap, searchableNodes, neighborMap };
   }, [graphData]);
 
@@ -123,8 +103,6 @@ export function useGraphSearch(graphData: GraphData | null) {
 
     const query = searchTerm.toLowerCase().trim();
     const results: SearchResult[] = [];
-
-    console.log("useGraphSearch: Searching for:", query);
 
     for (const item of searchIndex.searchableNodes) {
       // Calculate match score
@@ -167,13 +145,10 @@ export function useGraphSearch(graphData: GraphData | null) {
       if (results.length >= 50 && score < 100) break;
     }
 
-    console.log("useGraphSearch: Found", results.length, "results");
-
     // Sort by score and return top 10
     const topResults = results
       .sort((a, b) => b.matchScore - a.matchScore)
       .slice(0, 10);
-    console.log("useGraphSearch: Returning top", topResults.length, "results");
 
     return topResults;
   }, [searchTerm, searchIndex.searchableNodes]);
@@ -182,7 +157,6 @@ export function useGraphSearch(graphData: GraphData | null) {
   const getConnectedNodes = useCallback(
     (nodeId: string): Set<string> => {
       if (!graphData) {
-        console.log("useGraphSearch.getConnectedNodes: graphData is null");
         return new Set([nodeId]);
       }
 
@@ -197,13 +171,6 @@ export function useGraphSearch(graphData: GraphData | null) {
         return new Set([nodeId]);
       }
 
-      console.log(
-        "useGraphSearch.getConnectedNodes: Node",
-        nodeId,
-        "has",
-        neighbors.size,
-        "connected nodes"
-      );
       return neighbors;
     },
     [graphData, searchIndex.neighborMap]
@@ -212,11 +179,6 @@ export function useGraphSearch(graphData: GraphData | null) {
   // Search and return node with its connected nodes
   const searchAndHighlight = useCallback(
     (nodeId: string) => {
-      console.log(
-        "useGraphSearch.searchAndHighlight: Called with nodeId:",
-        nodeId
-      );
-
       const node = searchIndex.nodeMap.get(nodeId);
       if (!node) {
         console.error(
@@ -227,13 +189,6 @@ export function useGraphSearch(graphData: GraphData | null) {
       }
 
       const connectedNodeIds = getConnectedNodes(nodeId);
-
-      console.log("useGraphSearch.searchAndHighlight: Success!", {
-        nodeId: node.id,
-        nodeName: node.name,
-        connectedCount: connectedNodeIds.size,
-        connectedIds: Array.from(connectedNodeIds).slice(0, 5), // Log first 5
-      });
 
       return {
         node,

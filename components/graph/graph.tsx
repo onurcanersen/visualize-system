@@ -50,17 +50,6 @@ export function ForceGraph({
 }: ForceGraphProps) {
   const { graphRef, setGraphRef } = useGraphRef();
 
-  // Debug: Log search state changes
-  useEffect(() => {
-    console.log("ForceGraph: Search state updated:", {
-      searchNodeId,
-      connectedNodesCount: searchConnectedNodes?.size || 0,
-      connectedNodeIds: searchConnectedNodes
-        ? Array.from(searchConnectedNodes).slice(0, 5)
-        : [],
-    });
-  }, [searchNodeId, searchConnectedNodes]);
-
   const [highlightNodes, setHighlightNodes] = useState<Set<string>>(new Set());
   const [highlightLinks, setHighlightLinks] = useState<Set<GraphLink>>(
     new Set()
@@ -102,47 +91,6 @@ export function ForceGraph({
 
     return { nodes, links };
   }, [graphData]);
-
-  // Center camera on searched node (with delay to ensure graph is rendered)
-  useEffect(() => {
-    if (searchNodeId && processedGraphData && graphRef) {
-      // Add a small delay to ensure the graph has rendered the nodes
-      const timeoutId = setTimeout(() => {
-        const node = processedGraphData.nodes.find(
-          (n) => n.id === searchNodeId
-        );
-        if (node && node.x !== undefined && node.y !== undefined) {
-          console.log(
-            "ForceGraph: Attempting to center on node:",
-            node.name,
-            "at",
-            node.x,
-            node.y
-          );
-
-          // Try to center camera if methods are available
-          try {
-            if (graphRef && typeof graphRef.centerAt === "function") {
-              graphRef.centerAt(node.x, node.y, 1000);
-              console.log("ForceGraph: Centered camera");
-            }
-            if (graphRef && typeof graphRef.zoom === "function") {
-              graphRef.zoom(4, 1000);
-              console.log("ForceGraph: Zoomed camera");
-            }
-          } catch (error) {
-            console.warn(
-              "ForceGraph: Could not center camera (not critical):",
-              error
-            );
-            // Camera centering is optional - search will still work with highlighting
-          }
-        }
-      }, 100); // Small delay to ensure graph is ready
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [searchNodeId, processedGraphData, graphRef]);
 
   const handleNodeHover = useCallback((node: GraphNode | null) => {
     const newHighlightNodes = new Set<string>();
