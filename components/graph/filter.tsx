@@ -15,6 +15,61 @@ import { Badge } from "@/components/ui/badge";
 import { GraphData } from "@/lib/graph/types";
 import { NODE_COLORS, LINK_COLORS } from "@/lib/graph/styles";
 import { useFilterStats } from "@/hooks/use-filter-stats";
+import { getNodeShape, NodeShape } from "@/lib/graph/shapes";
+
+interface ShapeIconProps {
+  shape: NodeShape;
+  color: string;
+  isHidden?: boolean;
+}
+
+function ShapeIcon({ shape, color, isHidden = false }: ShapeIconProps) {
+  const opacity = isHidden ? 0.5 : 1;
+
+  switch (shape) {
+    case "rectangle":
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          className="flex-shrink-0"
+        >
+          <rect
+            x="1"
+            y="1"
+            width="10"
+            height="10"
+            fill={color}
+            opacity={opacity}
+          />
+        </svg>
+      );
+    case "triangle":
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          className="flex-shrink-0"
+        >
+          <polygon points="6,1 11,11 1,11" fill={color} opacity={opacity} />
+        </svg>
+      );
+    case "circle":
+    default:
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          className="flex-shrink-0"
+        >
+          <circle cx="6" cy="6" r="5" fill={color} opacity={opacity} />
+        </svg>
+      );
+  }
+}
 
 interface GraphFilterProps {
   graphData: GraphData | null;
@@ -37,6 +92,8 @@ function NodeItem({
   isHidden: boolean;
   onClick: () => void;
 }) {
+  const shape = getNodeShape(label);
+
   return (
     <div
       className={`flex items-center justify-between text-sm cursor-pointer rounded px-2 py-1 transition-colors hover:bg-sidebar-accent ${
@@ -45,10 +102,7 @@ function NodeItem({
       onClick={onClick}
     >
       <div className="flex items-center gap-2">
-        <div
-          className={`h-3 w-3 rounded-full ${isHidden ? "opacity-50" : ""}`}
-          style={{ backgroundColor: color }}
-        />
+        <ShapeIcon shape={shape} color={color} isHidden={isHidden} />
         <span className={isHidden ? "line-through" : ""}>{label}</span>
       </div>
       <Badge variant="secondary" className="h-5 text-xs">
@@ -71,6 +125,8 @@ function LinkItem({
   isHidden: boolean;
   onClick: () => void;
 }) {
+  const opacity = isHidden ? 0.5 : 1;
+
   return (
     <div
       className={`flex items-center justify-between text-sm cursor-pointer rounded px-2 py-1 transition-colors hover:bg-sidebar-accent ${
@@ -79,10 +135,22 @@ function LinkItem({
       onClick={onClick}
     >
       <div className="flex items-center gap-2">
-        <div
-          className={`h-0.5 w-4 ${isHidden ? "opacity-50" : ""}`}
-          style={{ backgroundColor: color }}
-        />
+        <svg
+          width="16"
+          height="12"
+          viewBox="0 0 16 12"
+          className="flex-shrink-0"
+        >
+          <line
+            x1="0"
+            y1="6"
+            x2="16"
+            y2="6"
+            stroke={color}
+            strokeWidth="2"
+            opacity={opacity}
+          />
+        </svg>
         <span className={`text-xs ${isHidden ? "line-through" : ""}`}>
           {label}
         </span>
