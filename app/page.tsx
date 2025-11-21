@@ -121,6 +121,7 @@ export default function GraphPage() {
           searchNodeId={searchNodeId}
           searchConnectedNodes={searchConnectedNodes}
           onClearSearch={handleClearSearch}
+          onNodeSearch={handleNodeSearch}
         />
         <GraphSidebar
           currentLayer={layer}

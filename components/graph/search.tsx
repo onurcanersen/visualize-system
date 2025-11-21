@@ -19,6 +19,7 @@ import { NODE_COLORS } from "@/lib/graph/styles";
 
 interface GraphSearchProps {
   graphData: GraphData | null;
+  currentLayer?: string;
   onNodeSearch?: (nodeId: string, connectedNodeIds: Set<string>) => void;
   onClearSearch?: () => void;
 }
@@ -64,6 +65,7 @@ function SearchSuggestion({
 
 export function GraphSearch({
   graphData,
+  currentLayer,
   onNodeSearch,
   onClearSearch,
 }: GraphSearchProps) {
@@ -78,6 +80,15 @@ export function GraphSearch({
   const [hasActiveSearch, setHasActiveSearch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  // Clear search when layer changes
+  useEffect(() => {
+    setSearchTerm("");
+    setShowSuggestions(false);
+    setHasActiveSearch(false);
+    setActiveSuggestionIndex(0);
+    onClearSearch?.();
+  }, [currentLayer, onClearSearch]);
 
   // Close suggestions when clicking outside
   useEffect(() => {

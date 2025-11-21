@@ -34,6 +34,7 @@ interface ForceGraphProps {
   searchNodeId?: string | null;
   searchConnectedNodes?: Set<string>;
   onClearSearch?: () => void;
+  onNodeSearch?: (nodeId: string, connectedNodeIds: Set<string>) => void;
 }
 
 export function ForceGraph({
@@ -47,6 +48,7 @@ export function ForceGraph({
   searchNodeId,
   searchConnectedNodes,
   onClearSearch,
+  onNodeSearch,
 }: ForceGraphProps) {
   const { graphRef, setGraphRef } = useGraphRef();
 
@@ -56,6 +58,22 @@ export function ForceGraph({
   );
   const [hoverNode, setHoverNode] = useState<string | null>(null);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  // Clear all modifications when layer changes
+  useEffect(() => {
+    // Clear selections
+    setSelectedNodeId(null);
+    onNodeSelect?.(null);
+    onLinkSelect?.(null);
+
+    // Clear search
+    onClearSearch?.();
+
+    // Clear highlights
+    setHighlightNodes(new Set());
+    setHighlightLinks(new Set());
+    setHoverNode(null);
+  }, [layer, onNodeSelect, onLinkSelect, onClearSearch]);
 
   // Process graph data to add neighbor and link references
   const processedGraphData = useMemo(() => {
@@ -115,9 +133,19 @@ export function ForceGraph({
         setSelectedNodeId(node.id);
         onNodeSelect?.(node);
         onLinkSelect?.(null); // Clear link selection
+
+        // Highlight node and its connections like search
+        const connectedNodeIds = new Set<string>();
+        connectedNodeIds.add(node.id);
+        node.neighbors?.forEach((neighborId) =>
+          connectedNodeIds.add(neighborId)
+        );
+
+        // Notify parent to apply search-like highlighting (if callback is provided)
+        onNodeSearch?.(node.id, connectedNodeIds);
       }
     },
-    [onNodeSelect, onLinkSelect]
+    [onNodeSelect, onLinkSelect, onNodeSearch]
   );
 
   const handleLinkHover = useCallback((link: GraphLink | null) => {

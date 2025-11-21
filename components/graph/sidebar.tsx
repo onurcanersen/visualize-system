@@ -46,6 +46,7 @@ export function GraphSidebar({
         <GraphLayer currentLayer={currentLayer} onLayerChange={onLayerChange} />
         <GraphSearch
           graphData={graphData}
+          currentLayer={currentLayer}
           onNodeSearch={onNodeSearch}
           onClearSearch={onClearSearch}
         />
@@ -53,7 +54,11 @@ export function GraphSidebar({
           selectedNode={selectedNode}
           selectedLink={selectedLink}
         />
-        <GraphFilter graphData={graphData} onFilterChange={onFilterChange} />
+        <GraphFilter
+          graphData={graphData}
+          currentLayer={currentLayer}
+          onFilterChange={onFilterChange}
+        />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

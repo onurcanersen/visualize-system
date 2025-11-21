@@ -73,6 +73,7 @@ function ShapeIcon({ shape, color, isHidden = false }: ShapeIconProps) {
 
 interface GraphFilterProps {
   graphData: GraphData | null;
+  currentLayer?: string;
   onFilterChange?: (
     hiddenNodeTypes: Set<string>,
     hiddenLinkTypes: Set<string>
@@ -162,7 +163,11 @@ function LinkItem({
   );
 }
 
-export function GraphFilter({ graphData, onFilterChange }: GraphFilterProps) {
+export function GraphFilter({
+  graphData,
+  currentLayer,
+  onFilterChange,
+}: GraphFilterProps) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const { nodeTypes, linkTypes } = useFilterStats(graphData);
@@ -173,6 +178,12 @@ export function GraphFilter({ graphData, onFilterChange }: GraphFilterProps) {
   const [hiddenLinkTypes, setHiddenLinkTypes] = useState<Set<string>>(
     new Set()
   );
+
+  // Clear filters when layer changes
+  useEffect(() => {
+    setHiddenNodeTypes(new Set());
+    setHiddenLinkTypes(new Set());
+  }, [currentLayer]);
 
   const toggleNodeType = (type: string) => {
     setHiddenNodeTypes((prev) => {
